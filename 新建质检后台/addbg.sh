@@ -1,5 +1,8 @@
 #/usr/bin/env bash
 old_dir=zlt
+
+#退格
+stty erase ^h
 read -p '请输入新的后台名称：' bs_name
 #echo $bs_name
 read -p '请输入新的后台端口：' bs_port
