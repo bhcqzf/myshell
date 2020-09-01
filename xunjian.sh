@@ -73,54 +73,71 @@ port_select(){
 case $1 in 
 tomcat)
 	port=8080
+	java_version=7
 	;;
 bpm)
 	port=8084
+	java_version=7
 	;;
 bpm_server)
 	port=8091
+	java_version=8
 	;;
 bpm_application)
 	port=8013
+	java_version=8
 	;;
 bpm_server_new)
 	port=8092
+	java_version=8
 	;;
 xxfb)
 	port=8029
+	java_version=7
 	;;
 yw)
 	port=8011
+	java_version=8
 	;;
 yw_new)
 	port=8010
+	java_version=8
 	;;
 app22)
 	port=8012
+	java_version=8
 	;;
 app24)
 	port=8013
+	java_version=8
 	;;
 chat)
 	port=7001
+	java_version=8
 	;;
 chat_service)
 	port=9323
+	java_version=8
 	;;
 bpm_dj)
 	port=8085
+	java_version=8
 	;;
 bpm_server_dj)
 	port=8093
+	java_version=8
 	;;
 dj)
 	port=8083
+	java_version=8
 	;;
 fmapp)
 	port=8082
+	java_version=8
 	;;
 bpm_server_fmapp)
 	port=8014
+	java_version=8
 	;;
 esac
 
@@ -129,13 +146,14 @@ esac
 control(){
 	echo "${1}情况"
 	port_select $1
+	java_version=7
 	pid=`ss -ntpl|awk "/${port}/{print $6};"|sed 's/.*pid=\(.*\),.*/\1/'`
 	        if [ -z ${pid} ];then
                 echo -e "  \033[31m ${1}进程未启动 \033[0m"
         else    
-                java7_old $pid
+                java${java_version}_old $pid
                 old=$?
-                java7_per $pid
+                java${java_version}_per $pid
                 per=$?
                 p_num=`ls  /proc/$pid/task|wc -w`
                 echo "  ${1}进程启动正常,进程ID:$pid"
