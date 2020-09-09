@@ -4,7 +4,6 @@
 #显示日常巡检信息，日志内容需要自己去查看
 #此脚本需要根据不同服务器选择不同模块使用
 #71服务器上的脚本是第一版，个别情况不准确
-
 #jdk1.7启动程序老年代内存占用
 java7_old(){
 	local PID=$1
@@ -30,7 +29,7 @@ java8_old(){
 }
 
 #jdk1.8启动程序元数据空间内存占用
-java8_met(){
+java8_per(){
 	local pid=$1
 	local METUSE=`/opt/jdk1.8.0_45/bin/jstat -gc $pid|awk '{if(NR==2){print($10)}}'|awk -F. '{print($1)}'`
 	local METMAX=`/opt/jdk1.8.0_45/bin/jstat -gccapacity $pid|awk '{if(NR==2){print($12)}}'|awk -F. '{print($1)}'`
@@ -146,8 +145,7 @@ esac
 control(){
 	echo "${1}情况"
 	port_select $1
-	java_version=7
-	pid=`ss -ntpl|awk "/${port}/{print $6};"|sed 's/.*pid=\(.*\),.*/\1/'`
+	pid=`ss -ntpl|awk "/:${port} /{print $6};"|sed 's/.*pid=\(.*\),.*/\1/'`
 	        if [ -z ${pid} ];then
                 echo -e "  \033[31m ${1}进程未启动 \033[0m"
         else    
