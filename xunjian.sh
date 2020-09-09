@@ -203,7 +203,7 @@ main(){
 disk
 mem
 cpu
-echo '-----------------------------------------------黄金分割--------------------------------------------------------------'
+echo '--------------------------'
 control tomcat
 control bpm_application
 control bpm_server
