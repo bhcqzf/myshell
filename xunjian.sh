@@ -167,7 +167,8 @@ control(){
 	port_select $1
 	pid=`ss -ntpl|awk "/:${port} /{print $6};"|sed 's/.*pid=\(.*\),.*/\1/'`
 	        if [ -z ${pid} ];then
-                echo -e "  \033[31m ${1}进程未启动 \033[0m"
+               #echo -e "  \033[31m ${1}进程未启动 \033[0m"
+		printf "%-20s\t%-s\n" ${1}进程 X
         else    
                 java${java_version}_old $pid
                 old=$?
@@ -175,17 +176,21 @@ control(){
                 per=$?
                 p_num=`ls  /proc/$pid/task|wc -w`
                 #echo "  ${1}进程启动正常,进程ID:$pid"
-		echo -e "${1}进程\t√"
+		#echo -e "${1}进程\t√"
+		printf "%-20s\t%-s\n" ${1}进程 √
                 #echo "  ${1}_jvm内存占用：老年代 $old%,持久代 $per%"
 		if [ $per -gt 90    ];then
-			echo -e "${1}内存\tX"
+			#echo -e "${1}内存\tX"
+			printf "%-20s\t%-s\n" ${1}内存 X
 		else
-			echo -e "${1}内存\t√"
+			#echo -e "${1}内存\t√"
+			printf "%-20s\t%-s\n" ${1}内存 √
 		fi
                 #echo "  ${1}启用线程数$(($p_num))"
-		echo -e "${1}线程数\t${p_num}"
+		#echo -e "${1}线程数\t${p_num}"
+		printf "%-20s\t%-s\n" ${1}线程数 ${p_num}
         fi
-        echo "--------------------"
+        #echo "--------------------"
 
 }
 main(){
