@@ -53,9 +53,11 @@ disk(){
 	fi
 	#echo "--------------------"
 	if [ $gen -gt 90      ];then
-		echo -e '磁盘容量\tX'
+		#echo -e '磁盘容量\tX'
+		printf "%-20s\t%-s\n" 磁盘容量 X
 	else
-		echo -e '磁盘容量\t√'
+		#echo -e '磁盘容量\t√'
+		printf "%-20s\t%-s\n" 磁盘容量 √
 	fi
 }
 
@@ -67,9 +69,11 @@ mem(){
 	#echo "--------------------"
 	#echo $neicun
 	if [  $neicun -gt 90    ];then
-		echo -e '内存\t\tX'
+		#echo -e '内存\t\tX'
+		printf "%-20s\t%-s\n" 内存 X
 	else
-		echo -e '内存\t\t√'
+		#echo -e '内存\t\t√'
+		printf "%-20s\t%-s\n" 内存 √
 	fi
 }
 
@@ -82,9 +86,11 @@ cpu(){
 	#echo "--------------------"
 	#echo $cpur
 	if  [ $cpur -gt 90   ];then
-		echo -e 'CPU\t\tX'
+		#echo -e 'CPU\t\tX'
+		printf "%-20s\t%-s\n" CPU X
 	else
-		echo -e 'CPU\t\t√'
+		#echo -e 'CPU\t\t√'
+		 printf "%-20s\t%-s\n" CPU √
 	fi
 }
 port_select(){
