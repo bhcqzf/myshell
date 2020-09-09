@@ -39,33 +39,53 @@ java8_per(){
 
 #磁盘使用情况
 disk(){
-	gen=`df -h | grep  '\/$'|awk '{print $5}'`
+	gen=`df -h | grep  '\/$'|awk '{print $5}'|sed 's/%//'`
 	home=`df -h | grep  'home$'|awk '{print $5}'`
-	echo "磁盘使用情况："
+	#echo "磁盘使用情况："
 	if [ -z  $home ];then
-		echo "  根分区目录已使用$gen"
+		#echo "  根分区目录已使用$gen"
+		:
 	else
-		echo "  根分区目录已使用$gen"
-		echo "  home目录已使用$home"
+		#echo "  根分区目录已使用$gen"
+		#echo "  home目录已使用$home"
+		#echo "--------------------------------------------------------------------------"
+		:
 	fi
-	echo "--------------------"
+	#echo "--------------------"
+	if [ $gen -gt 90      ];then
+		echo -e '磁盘容量\tX'
+	else
+		echo -e '磁盘容量\t√'
+	fi
 }
 
 #内存使用情况
 mem(){
-	echo "内存使用情况："
-	neicun=`free -m|awk '/Mem/{print($3/$2*100)}'`
-	echo "  内存已使用${neicun:0:5}%"
-	echo "--------------------"
+	#echo "内存使用情况："
+	neicun=`free -m|awk '/Mem/{print($3/$2*100)}'|awk -F. '{print $1}'`
+	#echo "  内存已使用${neicun:0:5}%"
+	#echo "--------------------"
+	#echo $neicun
+	if [  $neicun -gt 90    ];then
+		echo -e '内存\t\tX'
+	else
+		echo -e '内存\t\t√'
+	fi
 }
 
 #cpu使用情况
 #cpu使用率是实时变化的，以查看时取到的数值为准
 cpu(){
-	echo "cpu使用情况："
+	#echo "cpu使用情况："
 	cpur=`vmstat | awk '/3/{printf($13"\n")}'`
-	echo "  内存使用率是$cpur%"
-	echo "--------------------"
+	#echo "  内存使用率是$cpur%"
+	#echo "--------------------"
+	#echo $cpur
+	if  [ $cpur -gt 90   ];then
+		echo -e 'CPU\t\tX'
+	else
+		echo -e 'CPU\t\t√'
+	fi
 }
 port_select(){
 
@@ -143,7 +163,7 @@ esac
 
 }
 control(){
-	echo "${1}情况"
+	#echo "${1}情况"
 	port_select $1
 	pid=`ss -ntpl|awk "/:${port} /{print $6};"|sed 's/.*pid=\(.*\),.*/\1/'`
 	        if [ -z ${pid} ];then
@@ -154,9 +174,16 @@ control(){
                 java${java_version}_per $pid
                 per=$?
                 p_num=`ls  /proc/$pid/task|wc -w`
-                echo "  ${1}进程启动正常,进程ID:$pid"
-                echo "  ${1}_jvm内存占用：老年代 $old%,持久代 $per%"
-                echo "  ${1}启用线程数$(($p_num))"
+                #echo "  ${1}进程启动正常,进程ID:$pid"
+		echo -e "${1}进程\t√"
+                #echo "  ${1}_jvm内存占用：老年代 $old%,持久代 $per%"
+		if [ $per -gt 90    ];then
+			echo -e "${1}内存\tX"
+		else
+			echo -e "${1}内存\t√"
+		fi
+                #echo "  ${1}启用线程数$(($p_num))"
+		echo -e "${1}线程数\t${p_num}"
         fi
         echo "--------------------"
 
@@ -165,6 +192,7 @@ main(){
 disk
 mem
 cpu
+echo '-----------------------------------------------黄金分割--------------------------------------------------------------'
 control tomcat
 control bpm_application
 control bpm_server
